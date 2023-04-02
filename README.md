@@ -1,0 +1,1 @@
+# SFcollapse1D-carregado

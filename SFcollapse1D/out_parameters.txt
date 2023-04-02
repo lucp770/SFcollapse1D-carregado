@@ -1,0 +1,30 @@
+
+.------------------------.
+| Parameters of this run |
+.------------------------.
+Coordinate system: SinhSpherical
+Initial condition information:
+phi_{0}    = 2.000000000000000e-01
+r_{0}      = 0.00
+delta      = 1.00
+
+Radial grid information:
+N_{r}      = 321
+r_{max}    = 16
+dr_{min}   = 4.54073e-05
+sinhA      = 16.00
+sinhW      = 0.10000
+Points in 0<r<1: 232
+Points in 0<r<5: 283
+
+Time evolution information:
+N_{t}      = 440458
+t_{final}  = 10.00
+dt         = 2.270e-05
+CFL factor = 0.50
+
+ Spacetime information:
+SPACETIME_TYPE SELECTED: ANISOTROPIC_FLUID
+w_q = 0.333333
+C = -0.000000
+
