@@ -386,127 +386,169 @@ real evolution::pointwise_solution_of_the_Hamiltonian_constraint( const int j, g
   /* Set Newton's guess */
   real A_old = log(a[j-1]);
 
-  // calculate auxiliar variables.
-  const real tmp0 = half_invr * exp(A_old+A)*cosmological_term;
+  #if(NUMERICAL_METHOD == NEWTON_METHOD)
+    /* Set variable for output */
+    real A_new = A_old;
 
-  real inferior_limit = utilities::random_search_negative_values(inv_dx0, A, tmp0, half_invr,PhiPiTerm, ans_fluid_term);
-
-  real superior_limit = utilities::random_search_positive_values(inv_dx0, A, tmp0, half_invr,PhiPiTerm, ans_fluid_term);
-  
-  real f_superior = inv_dx0 * (superior_limit - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(superior_limit+A);
-
-  real f_inferior = inv_dx0 * (inferior_limit - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(inferior_limit+A);
-
-  // teste
-  real medio = (inferior_limit + superior_limit)/2;
-  real f_medio = inv_dx0 * (medio - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(medio+A);
-
-  // cout << "\n encerramento prematuro " << endl;
-  // cout << "\n superior limit antes : " << to_string(superior_limit) << endl;
-  // cout << "\n F superior  sntes : " << to_string(f_superior) << endl;
-
-  // cout << "\n inferior limit antes : " << to_string(inferior_limit) << endl;
-  // cout << "\n F inferior antes : " << to_string(f_inferior) << endl; 
-  
-  // cout << "\n c antes : " << to_string(medio) << endl;
-  // cout << "\n F c  sntes : " << to_string(f_medio) << endl;
-  // exit(0);
-
-  real f_c = 0;//set ans_fluid_term to zero in the caso of cosmological_spacetime
-  real c = 0;
-  int iteration = 0;
-
-  do{
-    //start the iterator
+    /* Set a counter */
+    real iter = 0;
     
-    if (f_superior > 0 && f_inferior <0){
+    /* Perform Newton's method */
+    do{
 
-      c = (superior_limit + inferior_limit)/2;
-
-      f_c = inv_dx0 * (c - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(c+A);
-
-      if(f_c > 0){
-        superior_limit = c;
-        f_superior = f_c;
-    
-      }
-      else if (f_c <0){
-        inferior_limit = c;
-        f_inferior = f_c;
-
-      }
-      else {
-        //if c is in fact the root
-        cout<< "\n \n c is the root "<< endl;
-        exit(1);
-        return exp(c);
-
-      }
-    }
-
-    else if (f_superior <0 && f_inferior >0){
-      // cout<< "condicao2" << endl;
-
-      c = (superior_limit + inferior_limit)/2;
-       cout << "c: " << to_string(c)<< endl;
-
-      f_c = inv_dx0 * (c - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(c+A);
-      cout<< "f_c" << to_string(f_c) << endl;
-
-      if(f_c > 0){
-        inferior_limit = c;
-        // cout<<"new inferior limit" << to_string(c) << endl;
-        f_inferior = f_c;
-      }
-
-      else if (f_c <0){
-        superior_limit = c;
-        // cout<<"new superior limit" << to_string(c) << endl;
-        f_superior = f_c;
-
-      }
-
-      else {
-        //if c is in fact the root
-        cout<< "\n \n c is the root "<< endl;
-        exit(1);
-        return exp(c);
-
-      }
-
-    }
-    else{
-      // what happens if this is satisfied???
+      /* Update A_old */
+      A_old = A_new;
       
-      cout << "condition not satisfied, please redefine the interval" << endl;
-      cout << "\n superior limit : " << to_string(superior_limit) << endl;
-      cout << "\n F superior : " << to_string(f_superior) << endl;
-      cout << "\n inferior limit : " << to_string(inferior_limit) << endl;
-      cout << "\n F inferior : " << to_string(f_inferior) << endl;
-      // cout<<" \n sup + inf / 2 (c teorico): " << to_string((superior_limit+inferior_limit)/2) << end;
-      cout << " \n c do programa (antes da iteração onde falha): " << to_string(c) << endl;
-      cout << " \n f_c: " << to_string(f_c) << endl;
+      /* Compute f and df */
+      const real tmp0 = half_invr * exp(A_old+A);
+      //const real tmp0 = half_invr * exp(A_old+A)*(1 - COSMOLOGICAL_CONSTANT * SQR(midx0) );
 
-      // generate the plot
+      const real f  = inv_dx0 * (A_old - A) + tmp0 - half_invr - PhiPiTerm;//equacao D4 completa
+      const real df = inv_dx0 + tmp0;//minha incognita do método não é r ou é? essa eq faz sentindo derivando-se em A
+      //pouco importa R, não é objetivo do metodo encontra-lo, mas sim Aj+1, essa á a incognita.
+
+      /* Update A_new */
+      A_new = A_old - f/df;
+
+      /* Increment the iterator */
+      iter++;
+
+    } while( ( fabs(A_new - A_old) > NEWTON_TOL ) && ( iter <= NEWTON_MAX_ITER ) );
+
+    /* Check for convergence */
+    if( iter > NEWTON_MAX_ITER ) cerr << "\n(Newton's method WARNING) Newton's method did not converge to a root! j = " << j << " | iter = " << iter << endl;
+
+    /* Return the value of a */
+    return( exp(A_new) );
+
+  #elif(NUMERICAL_METHOD == BISECTION_METHOD)
+
+    // calculate auxiliar variables.
+    const real tmp0 = half_invr * exp(A_old+A)*cosmological_term;
+
+    real inferior_limit = utilities::random_search_negative_values(inv_dx0, A, tmp0, half_invr,PhiPiTerm, ans_fluid_term);
+
+    real superior_limit = utilities::random_search_positive_values(inv_dx0, A, tmp0, half_invr,PhiPiTerm, ans_fluid_term);
+    
+    real f_superior = inv_dx0 * (superior_limit - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(superior_limit+A);
+
+    real f_inferior = inv_dx0 * (inferior_limit - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(inferior_limit+A);
+
+    // teste
+    real medio = (inferior_limit + superior_limit)/2;
+    real f_medio = inv_dx0 * (medio - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(medio+A);
+
+    // cout << "\n encerramento prematuro " << endl;
+    // cout << "\n superior limit antes : " << to_string(superior_limit) << endl;
+    // cout << "\n F superior  sntes : " << to_string(f_superior) << endl;
+
+    // cout << "\n inferior limit antes : " << to_string(inferior_limit) << endl;
+    // cout << "\n F inferior antes : " << to_string(f_inferior) << endl; 
+    
+    // cout << "\n c antes : " << to_string(medio) << endl;
+    // cout << "\n F c  sntes : " << to_string(f_medio) << endl;
+    // exit(0);
+
+    real f_c = 0;//set ans_fluid_term to zero in the caso of cosmological_spacetime
+    real c = 0;
+    int iteration = 0;
+
+    do{
+      //start the iterator
+      
+      if (f_superior > 0 && f_inferior <0){
+
+        c = (superior_limit + inferior_limit)/2;
+
+        f_c = inv_dx0 * (c - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(c+A);
+
+        if(f_c > 0){
+          superior_limit = c;
+          f_superior = f_c;
+      
+        }
+        else if (f_c <0){
+          inferior_limit = c;
+          f_inferior = f_c;
+
+        }
+        else {
+          //if c is in fact the root
+          cout<< "\n \n c is the root "<< endl;
+          exit(1);
+          return exp(c);
+
+        }
+      }
+
+      else if (f_superior <0 && f_inferior >0){
+        // cout<< "condicao2" << endl;
+
+        c = (superior_limit + inferior_limit)/2;
+        cout << "c: " << to_string(c)<< endl;
+
+        f_c = inv_dx0 * (c - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(c+A);
+        cout<< "f_c" << to_string(f_c) << endl;
+
+        if(f_c > 0){
+          inferior_limit = c;
+          // cout<<"new inferior limit" << to_string(c) << endl;
+          f_inferior = f_c;
+        }
+
+        else if (f_c <0){
+          superior_limit = c;
+          // cout<<"new superior limit" << to_string(c) << endl;
+          f_superior = f_c;
+
+        }
+
+        else {
+          //if c is in fact the root
+          cout<< "\n \n c is the root "<< endl;
+          exit(1);
+          return exp(c);
+
+        }
+
+      }
+      else{
+        // what happens if this is satisfied???
+        
+        cout << "condition not satisfied, please redefine the interval" << endl;
+        cout << "\n superior limit : " << to_string(superior_limit) << endl;
+        cout << "\n F superior : " << to_string(f_superior) << endl;
+        cout << "\n inferior limit : " << to_string(inferior_limit) << endl;
+        cout << "\n F inferior : " << to_string(f_inferior) << endl;
+        // cout<<" \n sup + inf / 2 (c teorico): " << to_string((superior_limit+inferior_limit)/2) << end;
+        cout << " \n c do programa (antes da iteração onde falha): " << to_string(c) << endl;
+        cout << " \n f_c: " << to_string(f_c) << endl;
+
+        // generate the plot
+        utilities::generate_plot_for_bissection(inv_dx0, A, tmp0, half_invr,PhiPiTerm, ans_fluid_term);
+        
+        exit(0);
+      }
+      iteration++;
+
+    }while((abs(f_superior - f_inferior) > NEWTON_TOL) && (iteration <= NEWTON_MAX_ITER ));
+            
+    if(iteration > NEWTON_MAX_ITER ){
+      cout << "Bissection method failed to converge ..... " << endl;
+      cout << to_string(abs(f_superior - f_inferior)) <<endl;
+
       utilities::generate_plot_for_bissection(inv_dx0, A, tmp0, half_invr,PhiPiTerm, ans_fluid_term);
-      
-      exit(0);
+      exit(1);
+
     }
-    iteration++;
+    real root = exp(c);
 
-  }while((abs(f_superior - f_inferior) > NEWTON_TOL) && (iteration <= NEWTON_MAX_ITER ));
-          
-  if(iteration > NEWTON_MAX_ITER ){
-    cout << "Bissection method failed to converge ..... " << endl;
-    cout << to_string(abs(f_superior - f_inferior)) <<endl;
+    return root;
 
-    utilities::generate_plot_for_bissection(inv_dx0, A, tmp0, half_invr,PhiPiTerm, ans_fluid_term);
-    exit(1);
+#else
+  utilities::SFcollapse1D_error(NUMERICAL_METHOD);
+#endif
 
-  }
-  real root = exp(c);
-
-  return root;
 }
 
 /* Function to solve the polar slicing condition */

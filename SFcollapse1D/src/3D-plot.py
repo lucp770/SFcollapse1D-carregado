@@ -80,8 +80,6 @@ for i in range(formato[0]):
 		if nan_values[i][j] == True: a[i][j] =2.5
 
 
-
-
 print(a[3110])
 r=[]
 with open('../out/'+a_files[0], 'r', encoding = 'utf-8') as text:
@@ -103,7 +101,7 @@ print("a_files",len(a_files))
 fig =plt.figure()
 ax = plt.axes(projection = '3d')
 
-ax.plot_surface(rr,tt,a,cmap ='viridis')
+ax.plot_surface(rr,tt,a,cmap ='viridis')	
 ax.set_xlabel('r')
 ax.set_ylabel('t')
 ax.set_zlim(0,3)

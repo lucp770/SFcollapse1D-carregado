@@ -66,8 +66,8 @@ unset key
 set xlabel "r"
 set ylabel label
 
-last_file_number  = 173
-output_multiplier = 1
+last_file_number  = 5930
+output_multiplier = 50
 
 number_of_files   = last_file_number/output_multiplier
 dt                = 1.685e-06

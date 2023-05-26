@@ -393,3 +393,8 @@ int main( int argc, char *argv[] ) {
   return 0;
 
 }
+
+
+/* A FAZER: verificar se aplicando um critério parecido com o do método da bissecção, de pegar somente
+as soluções que possuam um coeficiente angular positivo. É possível fazer com que o método de Newton passe a convergir.
+*/

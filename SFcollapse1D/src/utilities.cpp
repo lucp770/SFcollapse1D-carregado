@@ -770,6 +770,13 @@ void utilities::SFcollapse1D_error( const int error ) {
       exit(NAN_ERROR);
       break;
 
+    case NUMERICAL_METHOD:
+      cerr << "(Numerical_method error) invalid numerical method selected!\n";
+      cerr << "(SFcollapse1D INFO) Terminating the program...\n";
+      exit(0);
+      break;
+
+
   }
 
 }
@@ -900,6 +907,7 @@ real utilities::random_search_negative_values(real inv_dx0, real A, real tmp0, r
   cout << " \n negative_value not found" << endl;
   // create a check to understand the funcion.
 
+  utilities::generate_plot_for_bissection(inv_dx0, A, tmp0, half_invr,PhiPiTerm, ans_fluid_term);
   exit(0);
   return 0.0;
 }

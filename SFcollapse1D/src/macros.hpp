@@ -36,9 +36,15 @@ typedef std::vector< std::vector<double> > realmat;
 /* Set the coordinate system */
 #define SPHERICAL      (0)
 #define SINH_SPHERICAL (1)
-#define COORD_SYSTEM   SINH_SPHERICAL
-#define LAPSE_RESCALING (0)//when active (equals to 1) the lapse function is going to be rescaled and the lapse function analised in the origin
+// #define COORD_SYSTEM   SINH_SPHERICAL
+#define COORD_SYSTEM  SINH_SPHERICAL
+#define LAPSE_RESCALING (1)//when active (equals to 1) the lapse function is going to be rescaled and the lapse function analised in the origin
 #define EVENT_HORIZON_FORMATION_CRITERION (100)
+
+/* choose the numerical method to solve the PDE*/
+#define NEWTON_METHOD (0)
+#define BISECTION_METHOD (1)
+#define NUMERICAL_METHOD NEWTON_METHOD
 
 //set the spacetime type
 #define COSMOLOGICAL_CONSTANT_SPACETIME (0)
@@ -59,7 +65,8 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
 
 //it is recomended to write real numbers not integers
 // #define C (-0.0000001)
-#define C (-0.00000000001)
+
+#define C (0)
 #define W (1.0/3.0)
 #define COSMOLOGICAL_CONSTANT (0.0)
 
@@ -68,7 +75,6 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
 // #define c_max (0.1292)
 // -c = Q^2
 // #define c_final (-0.000000000001)
-
 
 /* define the term 2+3*w_q that apears in both evolution equations */
 
@@ -138,8 +144,8 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
 #define REGRID_INTERP_STENCIL_SIZE (3)
 
 /* Checkpoints */
-#define OUTPUT_CHECKPOINT                (1)
-#define CENTRAL_VALUES_OUTPUT_CHECKPOINT (1)
+#define OUTPUT_CHECKPOINT                (10)
+#define CENTRAL_VALUES_OUTPUT_CHECKPOINT (10)
 #define REGRID_CHECKER_CHECKPOINT        (100)
 #define LAPSE_COLLAPSE_CHECKPOINT        (50)
 #define NAN_CHECKER_CHECKPOINT           (50)

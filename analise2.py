@@ -11,7 +11,7 @@ def generate_bissection_plot(filepath):
 				l = line.split()
 				y_file.append(float(l[1]))
 				x_file.append(float(l[0]))
-	return [x_file[:250], y_file[:250]]
+	return [x_file[:300], y_file[:300]]
 
 
 filepath = './SFcollapse1D/bissection_output.dat'
