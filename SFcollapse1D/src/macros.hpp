@@ -38,13 +38,13 @@ typedef std::vector< std::vector<double> > realmat;
 #define SINH_SPHERICAL (1)
 // #define COORD_SYSTEM   SINH_SPHERICAL
 #define COORD_SYSTEM  SINH_SPHERICAL
-#define LAPSE_RESCALING (1)//when active (equals to 1) the lapse function is going to be rescaled and the lapse function analised in the origin
+#define LAPSE_RESCALING (0)//when active (equals to 1) the lapse function is going to be rescaled and the lapse function analised in the origin
 #define EVENT_HORIZON_FORMATION_CRITERION (100)
 
 /* choose the numerical method to solve the PDE*/
 #define NEWTON_METHOD (0)
 #define BISECTION_METHOD (1)
-#define NUMERICAL_METHOD NEWTON_METHOD
+#define NUMERICAL_METHOD BISECTION_METHOD
 
 //set the spacetime type
 #define COSMOLOGICAL_CONSTANT_SPACETIME (0)
@@ -66,7 +66,7 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
 //it is recomended to write real numbers not integers
 // #define C (-0.0000001)
 
-#define C (0)
+#define C (0.00000)
 #define W (1.0/3.0)
 #define COSMOLOGICAL_CONSTANT (0.0)
 
@@ -101,6 +101,7 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
 #define BISECTION_INTERVAL_ERROR     (7)
 #define BISECTION_CONVERGENCE_ERROR  (8)
 #define NAN_ERROR                    (9)
+#define NUMERICAL_METHOD_ERROR       (10)
 
 /* Initial condition macros */
 #define GAUSSIAN_SHELL    (0)
@@ -213,3 +214,10 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
   }
   
 #endif // __MACROS_HPP__
+
+
+/* 
+-se houver a presenca de uma carga no sistema e o metodo selecionado for o metodo de Newton, usar o sistema de busca aleatoris
+para escolher um intervalo onde a inclinação  é positiva e só então implementar o método de Newton para encontar a raiz da equação.
+
+*/

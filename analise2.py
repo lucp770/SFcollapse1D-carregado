@@ -11,16 +11,16 @@ def generate_bissection_plot(filepath):
 				l = line.split()
 				y_file.append(float(l[1]))
 				x_file.append(float(l[0]))
-	return [x_file[:300], y_file[:300]]
+	return [x_file[421:430], y_file[421:430]]
 
 
-filepath = './SFcollapse1D/bissection_output.dat'
+filepath = './SFcollapse1D/bissection_output-5.489209.dat'
 # filepath = './SFcollapse1D/out/a_00005900.dat'
 # filepath = './SFcollapse1D/out/a_00000173.dat'
 
 array = generate_bissection_plot(filepath)
 
-x_array = np.linspace(-30, 0,200)
+x_array = np.linspace(12, 12.9,200)
 y_array = 0 * x_array
 
 plt.plot(array[0], array[1])

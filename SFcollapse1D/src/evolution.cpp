@@ -369,8 +369,6 @@ real evolution::pointwise_solution_of_the_Hamiltonian_constraint( const int j, g
     #if (SPACETIME_TYPE == ANISOTROPIC_FLUID)
     const real ans_fluid_term = (3 * c_final * w_q)/(2* pow(r_sinh, anisotropic_exponent));
     const real cosmological_term = 1;
-
-
     #endif
 
     #if(SPACETIME_TYPE==COSMOLOGICAL_CONSTANT_SPACETIME)
@@ -383,45 +381,70 @@ real evolution::pointwise_solution_of_the_Hamiltonian_constraint( const int j, g
     utilities::SFcollapse1D_error(COORD_SYSTEM_ERROR);
   #endif
 
-  /* Set Newton's guess */
-  real A_old = log(a[j-1]);
-
+ 
   #if(NUMERICAL_METHOD == NEWTON_METHOD)
-    /* Set variable for output */
-    real A_new = A_old;
 
-    /* Set a counter */
-    real iter = 0;
-    
-    /* Perform Newton's method */
-    do{
 
-      /* Update A_old */
-      A_old = A_new;
+    #if(SPACETIME_TYPE == ANISOTROPIC_FLUID)
+    const real aux0 = half_invr * exp(A+A);//confirmar esse valor.
+
+    // Preciso modificar o chute inicial do método de Newton. (quero garantir que esteja proximo da primeira raiz.)
+    // real negative_point_positive_inclination = utilities::random_search_negative_values(inv_dx0, A, aux0, half_invr,PhiPiTerm, ans_fluid_term);
+    /*
+    implementar aqui  o plot do grafico para o sistema de equações diferenciais para  visualizar se a raiz buscada é
+    realmente aquela que esta sendo encontrada pelo metodo de newton.
+    */
+
+    // real A_old = negative_point_positive_inclination;//seta como um
+    real A_old = log(a[j-1]);
+    //preciso parar o progrm
+
+
+    #else
+      /* Set Newton's guess */
+      real A_old = log(a[j-1]);
+    #endif
+
+      /* Set variable for output */
+      real A_new = A_old;
+
+      /* Set a counter */
+      real iter = 0;
       
-      /* Compute f and df */
-      const real tmp0 = half_invr * exp(A_old+A);
-      //const real tmp0 = half_invr * exp(A_old+A)*(1 - COSMOLOGICAL_CONSTANT * SQR(midx0) );
+      /* Perform Newton's method */
+      do{
 
-      const real f  = inv_dx0 * (A_old - A) + tmp0 - half_invr - PhiPiTerm;//equacao D4 completa
-      const real df = inv_dx0 + tmp0;//minha incognita do método não é r ou é? essa eq faz sentindo derivando-se em A
-      //pouco importa R, não é objetivo do metodo encontra-lo, mas sim Aj+1, essa á a incognita.
+        /* Update A_old */
+        A_old = A_new;
+        
+        /* Compute f and df */
+        const real tmp0 = half_invr * exp(A_old+A);
+        //const real tmp0 = half_invr * exp(A_old+A)*(1 - COSMOLOGICAL_CONSTANT * SQR(midx0) );
 
-      /* Update A_new */
-      A_new = A_old - f/df;
+        const real f  = inv_dx0 * (A_old - A) + tmp0 - half_invr - PhiPiTerm;//equacao D4 completa
+        const real df = inv_dx0 + tmp0;//minha incognita do método não é r ou é? essa eq faz sentindo derivando-se em A
+        //pouco importa R, não é objetivo do metodo encontra-lo, mas sim Aj+1, essa á a incognita.
 
-      /* Increment the iterator */
-      iter++;
+        /* Update A_new */
+        A_new = A_old - f/df;
+        // utilities::generate_plot_for_bissection(inv_dx0, A, tmp0, half_invr,PhiPiTerm, ans_fluid_term);
+        // exit(0);
 
-    } while( ( fabs(A_new - A_old) > NEWTON_TOL ) && ( iter <= NEWTON_MAX_ITER ) );
+        /* Increment the iterator */
+        iter++;
 
-    /* Check for convergence */
-    if( iter > NEWTON_MAX_ITER ) cerr << "\n(Newton's method WARNING) Newton's method did not converge to a root! j = " << j << " | iter = " << iter << endl;
+      } while( ( fabs(A_new - A_old) > NEWTON_TOL ) && ( iter <= NEWTON_MAX_ITER ) );
 
-    /* Return the value of a */
-    return( exp(A_new) );
+      /* Check for convergence */
+      if( iter > NEWTON_MAX_ITER ) cerr << "\n(Newton's method WARNING) Newton's method did not converge to a root! j = " << j << " | iter = " << iter << endl;
+
+      /* Return the value of a */
+      return( exp(A_new) );
+      // exit(0);      
+
 
   #elif(NUMERICAL_METHOD == BISECTION_METHOD)
+   real A_old = log(a[j-1]);
 
     // calculate auxiliar variables.
     const real tmp0 = half_invr * exp(A_old+A)*cosmological_term;

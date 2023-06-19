@@ -547,15 +547,26 @@ void utilities::parameter_information( grid::parameters grid ) {
     cout << fixed      << setprecision(2)  << "CFL factor = " << CFL_FACTOR      << endl;
 
   #if(SPACETIME_TYPE == COSMOLOGICAL_CONSTANT_SPACETIME)
-    cout << "\n Spacetime information:"    << endl;
+    cout << "\nSpacetime information:"    << endl;
     cout << "SPACETIME_TYPE SELECTED: COSMOLOGICAL_CONSTANT_SPACETIME" << endl;
     cout << "Constante Cosmologica: " <<setprecision(7) << to_string(cosmological_constant) << endl;
     
   #elif(SPACETIME_TYPE == ANISOTROPIC_FLUID)
-    cout << "\n Spacetime information:"    << endl;
+    cout << "\nSpacetime information:"    << endl;
     cout << "SPACETIME_TYPE SELECTED: ANISOTROPIC_FLUID" << endl;
     cout << fixed      << setprecision(7)  << "w_q = " << to_string(w_q)      << endl;
     cout << fixed      << setprecision(15)  << "C = " << to_string(c_final)     << endl;
+  #endif
+
+  #if(NUMERICAL_METHOD == NEWTON_METHOD)
+    cout << "\nNumerical Method information: " << endl;
+    cout << "NUMERICAL METHOD USED: NEWTON METHOD" << endl;
+    cout << "CFL FACTOR" << to_string(CFL_FACTOR) << endl;
+
+  #elif(NUMERICAL_METHOD == BISECTION_METHOD)
+    cout << "\nNumerical Method information: " << endl;
+    cout << "NUMERICAL METHOD USED: BISECTION_METHOD" << endl;
+    cout << "CFL FACTOR: " << to_string(CFL_FACTOR) << endl;
   #endif
 
     cout << "\n";
@@ -770,7 +781,7 @@ void utilities::SFcollapse1D_error( const int error ) {
       exit(NAN_ERROR);
       break;
 
-    case NUMERICAL_METHOD:
+    case NUMERICAL_METHOD_ERROR:
       cerr << "(Numerical_method error) invalid numerical method selected!\n";
       cerr << "(SFcollapse1D INFO) Terminating the program...\n";
       exit(0);
@@ -814,8 +825,8 @@ real utilities::random_search_positive_values(real inv_dx0, real A, real tmp0, r
 
   for(int i=0; i < 100000; i++){
 
-    real number = rand() % 500;
-    real number2 = - rand() % 500;
+    real number = rand() % 1000;
+    real number2 = - rand() % 1000;
     real result1 = inv_dx0 * (number - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(number+A);
     real result2 =inv_dx0 * (number2 - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(number2+A);
 
@@ -870,8 +881,8 @@ real utilities::random_search_negative_values(real inv_dx0, real A, real tmp0, r
 
   for(int i=0; i < 100000000; i++){
 
-    real number = rand() % 500;
-    real number2 = - rand() % 500;
+    real number = rand() % 1000;
+    real number2 = - rand() % 1000;
     //maybe only need to not stop the program if the value is infinity.
 
     //maybe can eliminate the search for negative numbers.--> can improve speed.
@@ -920,30 +931,31 @@ void utilities::generate_plot_for_bissection(real inv_dx0, real A, real tmp0, re
   real x = -30;
   // print to file, x and y:
   ofstream outfile;
-  outfile.open("bissection_output.dat");
+  outfile.open("bissection_output-"+to_string(A) + ".dat");
 
+  // generate (x,y) points for the current value of A,tmp0, etc...
   while(cont < 10000){
-  real y = inv_dx0 * (x - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(x+A);
-  // const int number_of_digits = 8;
-  outfile.precision(15);
-  outfile << scientific << x << " " << y << endl;
-  x += 0.1;
-  cont += 1;
+    real y = inv_dx0 * (x - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(x+A);
+    // const int number_of_digits = 8;
+    outfile.precision(15);
+    outfile << scientific << x << " " << y << endl;
+    x += 0.1;
+    cont += 1;
 
   }
 
   outfile.close();
 
-  for(int i=0; i < 10000; i++){
+  // for(int i=0; i < 10000; i++){
 
-    real number = rand() % 500;
-    real number2 = - rand() % 500;
-    //maybe only need to not stop the program if the value is infinity.
+  //   real number = rand() % 500;
+  //   real number2 = - rand() % 500;
+  //   //maybe only need to not stop the program if the value is infinity.
 
-    //maybe can eliminate the search for negative numbers.--> can improve speed.
-    real result1 = inv_dx0 * (number - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(number+A);
-    real result2 =inv_dx0 * (number2 - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(number2+A);
+  //   //maybe can eliminate the search for negative numbers.--> can improve speed.
+  //   real result1 = inv_dx0 * (number - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(number+A);
+  //   real result2 =inv_dx0 * (number2 - A) + tmp0 - half_invr - PhiPiTerm + ans_fluid_term * exp(number2+A);
 
-  }
+  // }
 }
 

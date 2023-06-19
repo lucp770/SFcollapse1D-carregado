@@ -28,13 +28,13 @@ if ( which_var eq 'scalarfield' ) {
   label = "phi(t,r)"
 }
 if( which_var eq 'Phi' ) {
-  ymin = -0.01
-  ymax = +0.01
+  ymin = -1.01
+  ymax = +1.01
   label = "Phi(t,r)"
 }
 if( which_var eq 'Pi' ) {
-  ymin = -0.02
-  ymax = +0.02
+  ymin = -1.02
+  ymax = +1.02
   label = "Pi(t,r)"
 }
 if( which_var eq 'a' ) {

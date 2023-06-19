@@ -325,6 +325,8 @@ int main( int argc, char *argv[] ) {
       Pi.output_to_file(grid,"Pi",1,n);
       a.output_to_file(grid,"a",1,n);
       alpha.output_to_file(grid,"alpha",1,n);
+
+      // exit(0);
        // utilities::compute_and_output_mass_aspect_function(1,n,grid,a);
     //utilities::output_energy_density_to_file( grid, Phi.level_np1, Pi.level_np1, a.level_np1, n );
     }
