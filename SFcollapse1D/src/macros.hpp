@@ -44,7 +44,7 @@ typedef std::vector< std::vector<double> > realmat;
 /* choose the numerical method to solve the PDE*/
 #define NEWTON_METHOD (0)
 #define BISECTION_METHOD (1)
-#define NUMERICAL_METHOD BISECTION_METHOD
+#define NUMERICAL_METHOD NEWTON_METHOD
 
 //set the spacetime type
 #define COSMOLOGICAL_CONSTANT_SPACETIME (0)
@@ -66,7 +66,7 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
 //it is recomended to write real numbers not integers
 // #define C (-0.0000001)
 
-#define C (0.00000)
+#define C (-0.000001)
 #define W (1.0/3.0)
 #define COSMOLOGICAL_CONSTANT (0.0)
 

@@ -29,7 +29,7 @@ if ( which_var eq 'scalarfield' ) {
 }
 if( which_var eq 'Phi' ) {
   ymin = -1.01
-  ymax = +1.01
+  ymax = +5.01
   label = "Phi(t,r)"
 }
 if( which_var eq 'Pi' ) {
@@ -58,7 +58,7 @@ if( which_var eq 'mass' ) {
   label = "rho(t,r)"
 }
 
-set xrange [0.0:10.0]
+set xrange [0.0:1.0]
 set yrange [ymin:ymax]
 
 set grid

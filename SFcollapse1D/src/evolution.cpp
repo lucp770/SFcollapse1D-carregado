@@ -337,7 +337,7 @@ real evolution::pointwise_solution_of_the_Hamiltonian_constraint( const int j, g
   DECLARE_GRID_PARAMETERS;
 
   /* Set auxiliary variables */
-  const real A         = log(a[j-1]);               // A^{n+1}_{j} + 1???(para convergir.)
+  const real A         = log(a[j-1]);           
   const real avgPhi    = 0.5*( Phi[j] + Phi[j-1] ); // 0.5*( Phi^{n+1}_{j+1} + Phi^{n+1}_{j} )
   const real avgPi     = 0.5*( Pi[j]  + Pi[j-1]  ); // 0.5*(  Pi^{n+1}_{j+1} +  Pi^{n+1}_{j} )
   const real PhiSqr    = SQR(avgPhi);
@@ -369,12 +369,9 @@ real evolution::pointwise_solution_of_the_Hamiltonian_constraint( const int j, g
     #if (SPACETIME_TYPE == ANISOTROPIC_FLUID)
     const real ans_fluid_term = (3 * c_final * w_q)/(2* pow(r_sinh, anisotropic_exponent));
     const real cosmological_term = 1;
-    #endif
-
-    #if(SPACETIME_TYPE==COSMOLOGICAL_CONSTANT_SPACETIME)
+    #elif(SPACETIME_TYPE==COSMOLOGICAL_CONSTANT_SPACETIME)
       const real cosmological_term = 1 - cosmological_constant *  SQR(r_sinh);
       const real ans_fluid_term = 0.0;
-
     #endif
 
   #else
@@ -386,7 +383,7 @@ real evolution::pointwise_solution_of_the_Hamiltonian_constraint( const int j, g
 
 
     #if(SPACETIME_TYPE == ANISOTROPIC_FLUID)
-    const real aux0 = half_invr * exp(A+A);//confirmar esse valor.
+    const real aux0 = half_invr;//confirmar esse valor.
 
     // Preciso modificar o chute inicial do método de Newton. (quero garantir que esteja proximo da primeira raiz.)
     // real negative_point_positive_inclination = utilities::random_search_negative_values(inv_dx0, A, aux0, half_invr,PhiPiTerm, ans_fluid_term);
@@ -418,15 +415,20 @@ real evolution::pointwise_solution_of_the_Hamiltonian_constraint( const int j, g
         A_old = A_new;
         
         /* Compute f and df */
-        const real tmp0 = half_invr * exp(A_old+A);
+        const real tmp0 = half_invr * exp(A_old+A)*cosmological_term;
+
+        const real tmp1 = ans_fluid_term * exp(A_old+A);
         //const real tmp0 = half_invr * exp(A_old+A)*(1 - COSMOLOGICAL_CONSTANT * SQR(midx0) );
 
-        const real f  = inv_dx0 * (A_old - A) + tmp0 - half_invr - PhiPiTerm;//equacao D4 completa
-        const real df = inv_dx0 + tmp0;//minha incognita do método não é r ou é? essa eq faz sentindo derivando-se em A
+        const real f  = inv_dx0 * (A_old - A) + tmp0 - half_invr - PhiPiTerm + tmp1;//equacao D4 completa
+
+        const real df = inv_dx0 + tmp0 + tmp1 ;//essa eq faz sentindo derivando-se em A
+
         //pouco importa R, não é objetivo do metodo encontra-lo, mas sim Aj+1, essa á a incognita.
 
         /* Update A_new */
         A_new = A_old - f/df;
+        
         // utilities::generate_plot_for_bissection(inv_dx0, A, tmp0, half_invr,PhiPiTerm, ans_fluid_term);
         // exit(0);
 
@@ -601,7 +603,7 @@ real evolution::pointwise_solution_of_the_polar_slicing_condition( const int j, 
   const real r_sinh = A_over_sinh_inv_W * sinh(inv_sinhW * (0.5 * (x[0][j] + x[0][j-1])));
 
   #if (SPACETIME_TYPE == ANISOTROPIC_FLUID)
-    const real ans_fluid_term = (3 * c_final * w_q)/(2* pow(r_sinh, anisotropic_exponent));
+    const real ans_fluid_term = (3 * c_final * w_q)/(2* pow(r_sinh, anisotropic_exponent));//pq 2*?
     const real cosmological_term = 1.0;
 
   #elif (SPACETIME_TYPE == COSMOLOGICAL_CONSTANT_SPACETIME)
@@ -617,7 +619,8 @@ real evolution::pointwise_solution_of_the_polar_slicing_condition( const int j, 
 
   #if (SPACETIME_TYPE == ANISOTROPIC_FLUID)
     const real d = (1.0 - 0.25 * SQR(b))/( 2.0 * midway_r ) - inv_dx0 * c / b - 0.25 * ans_fluid_term * SQR(b);//representa oq esta em chaves na equação D5
-  
+    // const real d = ( 1.0 - 0.25 * SQR(b) )/( 2.0 * midway_r ) - inv_dx0 * c / b;
+
   #elif (SPACETIME_TYPE == COSMOLOGICAL_CONSTANT_SPACETIME)
     const real d = ( 1.0 - 0.25 * SQR(b) * cosmological_term )/( 2.0 * midway_r ) - inv_dx0 * c / b;
   #endif
