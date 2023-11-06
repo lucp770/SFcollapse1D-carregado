@@ -152,6 +152,10 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
 #define NAN_CHECKER_CHECKPOINT           (50)
 #define INFORMATION_CHECKPOINT           (50)
 
+/*Other ultilities*/
+#define SHOW_RESCALING_VALUES            (0)
+
+
 /* Set the declare grid parameters macro. This macro
  * is useful so that we don't need to keep appending
  * "grid." to the variables inside the grid_parameters

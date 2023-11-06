@@ -603,7 +603,7 @@ real evolution::pointwise_solution_of_the_polar_slicing_condition( const int j, 
   const real r_sinh = A_over_sinh_inv_W * sinh(inv_sinhW * (0.5 * (x[0][j] + x[0][j-1])));
 
   #if (SPACETIME_TYPE == ANISOTROPIC_FLUID)
-    const real ans_fluid_term = (3 * c_final * w_q)/(2* pow(r_sinh, anisotropic_exponent));//pq 2*?
+    const real ans_fluid_term = (3 * c_final * w_q)/(2* pow(r_sinh, anisotropic_exponent));
     const real cosmological_term = 1.0;
 
   #elif (SPACETIME_TYPE == COSMOLOGICAL_CONSTANT_SPACETIME)
@@ -637,6 +637,16 @@ void evolution::rescaling_of_the_lapse( grid::parameters grid, const realvec a, 
   /* Set the initial value of kappa */
   real kappa = a[0]/alpha[0];
 
+  #if (SHOW_RESCALING_VALUES == 1)
+    real initial_kappa = a[0]/alpha[0];
+    ofstream outpuFile;//create an instance of a file
+  
+    outpuFile.open("rescaling_values.dat",ios_base::app);
+    outpuFile.precision(15);
+
+
+  #endif
+
   /* Loop over the grid, updating kappa if needed */
   LOOP(1,Nx0Total) {
     real kappa_new = a[j]/alpha[j];
@@ -644,6 +654,15 @@ void evolution::rescaling_of_the_lapse( grid::parameters grid, const realvec a, 
       kappa = kappa_new;
   
   }
+
+  /*print to file the values the lapse rescaling if this option is selected*/
+  #if (SHOW_RESCALING_VALUES == 1)
+    outpuFile << scientific << initial_kappa << " " << kappa << endl;
+    outpuFile.close();
+
+  #endif
+
+
 
   /* Rescale the lapse */
   LOOP(0,Nx0Total) alpha[j] *= kappa;
