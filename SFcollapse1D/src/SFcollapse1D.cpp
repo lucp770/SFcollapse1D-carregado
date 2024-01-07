@@ -332,7 +332,7 @@ int main( int argc, char *argv[] ) {
     }
 
     // Output central values
-     if( n%10 == 0 ) {
+     if( n%100 == 0 ) {
       utilities::output_gridfunctions_central_values( n, grid, phi.level_np1, Phi.level_np1, Pi.level_np1, a.level_np1, alpha.level_np1 );
        }
      //if(n%50 == 0){
@@ -363,20 +363,20 @@ int main( int argc, char *argv[] ) {
   // const real eta_strong = 1.591203885328e-2;
 
   // Tanh shell
-  const real eta_weak   = 0.3364257813;
-  const real eta_strong = 0.3364257875;
+  // const real eta_weak   = 0.3364257813;
+  // const real eta_strong = 0.3364257875;
 
   // // Set eta_{*}
-  const real eta_c      = 0.5*( eta_weak + eta_strong );
-  ofstream out_central_density;
-  out_central_density.open("max_central_density_values_tanh.dat",ios_base::app);
-  out_central_density << scientific << setprecision(15)
-  		      << grid.phi0                << " "
-  		      << max_central_density      << " "
-  		      << eta_c - grid.phi0        << " "
-  		      << log(eta_c - grid.phi0)   << " "
-  		      << log(max_central_density) << endl;
-  out_central_density.close();
+  // const real eta_c      = 0.5*( eta_weak + eta_strong );
+  // ofstream out_central_density;
+  // out_central_density.open("max_central_density_values_tanh.dat",ios_base::app);
+  // out_central_density << scientific << setprecision(15)
+  // 		      << grid.phi0                << " "
+  // 		      << max_central_density      << " "
+  // 		      << eta_c - grid.phi0        << " "
+  // 		      << log(eta_c - grid.phi0)   << " "
+  // 		      << log(max_central_density) << endl;
+  // out_central_density.close();
 
 
 

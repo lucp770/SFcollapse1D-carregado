@@ -4,7 +4,7 @@
 .------------------------.
 Coordinate system: SinhSpherical
 Initial condition information:
-phi_{0}    = 3.000000000000000e-01
+phi_{0}    = 5.000000000000000e-01
 r_{0}      = 0.00
 delta      = 1.00
 
@@ -25,8 +25,8 @@ CFL factor = 0.50
 
 Spacetime information:
 SPACETIME_TYPE SELECTED: ANISOTROPIC_FLUID
-w_q = 0.333333
-C = -0.000001
+w_q = -1.000000
+C = 0.000000
 
 Numerical Method information: 
 NUMERICAL METHOD USED: NEWTON METHOD

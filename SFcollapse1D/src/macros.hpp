@@ -38,7 +38,7 @@ typedef std::vector< std::vector<double> > realmat;
 #define SINH_SPHERICAL (1)
 // #define COORD_SYSTEM   SINH_SPHERICAL
 #define COORD_SYSTEM  SINH_SPHERICAL
-#define LAPSE_RESCALING (0)//when active (equals to 1) the lapse function is going to be rescaled and the lapse function analised in the origin
+#define LAPSE_RESCALING (1)//when active (equals to 1) the lapse function is going to be rescaled and the lapse function analised in the origin
 #define EVENT_HORIZON_FORMATION_CRITERION (100)
 
 /* choose the numerical method to solve the PDE*/
@@ -50,7 +50,7 @@ typedef std::vector< std::vector<double> > realmat;
 #define COSMOLOGICAL_CONSTANT_SPACETIME (0)
 #define ANISOTROPIC_FLUID (1)
 
-#define SPACETIME_TYPE ANISOTROPIC_FLUID
+#define SPACETIME_TYPE COSMOLOGICAL_CONSTANT_SPACETIME
 
 //set spacetyme parameters for each type
 
@@ -65,10 +65,10 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
 
 //it is recomended to write real numbers not integers
 // #define C (-0.0000001)
-
-#define C (-0.000001)
-#define W (1.0/3.0)
-#define COSMOLOGICAL_CONSTANT (0.0)
+// #define C (0)
+#define C (-0.01/3.0)
+#define W (-1.0)//para RN: +1/3
+#define COSMOLOGICAL_CONSTANT (-0.01)
 
 // #define anisotropic_exponent (2 + 3 * w_q)
 
@@ -130,10 +130,10 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
 
 /* Newton's method parameters */
 #define NEWTON_TOL      (1e-8)
-#define NEWTON_MAX_ITER (100000)
+#define NEWTON_MAX_ITER (100)
 
 /* Lapse collapse criterion */
-#define LAPSE_COLLAPSE_CRITERION (1e-4)
+#define LAPSE_COLLAPSE_CRITERION (1e-3)
 
 /* Regridding parameters */
 #define REGRID_RADIAL_POINTS       (1)
@@ -145,8 +145,8 @@ f(r) = 1 - 2M/r - (COSMOLOGICAL_CONSTANT)*r^2;
 #define REGRID_INTERP_STENCIL_SIZE (3)
 
 /* Checkpoints */
-#define OUTPUT_CHECKPOINT                (10)
-#define CENTRAL_VALUES_OUTPUT_CHECKPOINT (10)
+#define OUTPUT_CHECKPOINT                (100)
+#define CENTRAL_VALUES_OUTPUT_CHECKPOINT (1)
 #define REGRID_CHECKER_CHECKPOINT        (100)
 #define LAPSE_COLLAPSE_CHECKPOINT        (50)
 #define NAN_CHECKER_CHECKPOINT           (50)
