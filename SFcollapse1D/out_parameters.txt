@@ -4,7 +4,7 @@
 .------------------------.
 Coordinate system: SinhSpherical
 Initial condition information:
-phi_{0}    = 5.000000000000000e-01
+phi_{0}    = 3.351568373779290e-01
 r_{0}      = 0.00
 delta      = 1.00
 
@@ -18,15 +18,14 @@ Points in 0<r<1: 144
 Points in 0<r<5: 246
 
 Time evolution information:
-N_{t}      = 5936
-t_{final}  = 10.00
+N_{t}      = 8904
+t_{final}  = 15.00
 dt         = 1.685e-03
 CFL factor = 0.50
 
 Spacetime information:
-SPACETIME_TYPE SELECTED: ANISOTROPIC_FLUID
-w_q = -1.000000
-C = 0.000000
+SPACETIME_TYPE SELECTED: COSMOLOGICAL_CONSTANT_SPACETIME
+Constante Cosmologica: -0.010000
 
 Numerical Method information: 
 NUMERICAL METHOD USED: NEWTON METHOD
